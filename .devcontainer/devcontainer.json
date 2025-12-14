@@ -1,0 +1,17 @@
+{
+	"name": "r-snoop-dev",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+
+	"runArgs": [
+		"--network=host",
+		"--privileged"
+	],
+
+	"customizations": {
+		"vscode": {
+			"extensions": ["rust-lang.rust-analyzer"]
+		}
+	}
+}

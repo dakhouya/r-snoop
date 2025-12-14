@@ -1,0 +1,18 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Run r-snoop with interface",
+      "type": "shell",
+      "command": "sudo ./target/debug/r-snoop --interface ${config:R_SNOOP_INTERFACE}",
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "presentation": {
+        "reveal": "always"
+      },
+      "problemMatcher": []
+    }
+  ]
+}
