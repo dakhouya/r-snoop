@@ -13,6 +13,19 @@
         "reveal": "always"
       },
       "problemMatcher": []
+    },
+    {
+      "label": "Run clippy",
+      "type": "shell",
+      "command": "cargo clippy --all-targets --all-features -- -D warnings",
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "presentation": {
+        "reveal": "always"
+      },
+      "problemMatcher": []
     }
   ]
 }
