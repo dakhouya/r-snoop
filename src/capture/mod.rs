@@ -1,7 +1,11 @@
+pub mod device_info;
+pub mod device_info_list;
+
 use pcap::{Device, Capture};
 use anyhow::{Result, Context};
 
 use crate::parsers;
+use device_info_list::DeviceInfoList;
 
 pub struct Sniffer {
     device_name: String,
@@ -30,9 +34,23 @@ impl Sniffer {
 
         println!("Listening on {}...", self.device_name);
 
+        let mut devices = DeviceInfoList::new();
+
         while let Ok(packet) = cap.next_packet() {
-            // Pass the data to the parser
-            parsers::handle_packet(packet.data);
+            if let Some(info) = parsers::handle_packet(packet.data) {
+                // Append if not present: prefer MAC matching when available; otherwise by name
+                let already_present = if let Some(mac) = info.mac() {
+                    devices.find_by_mac(mac).is_some()
+                } else {
+                    devices.find_by_name(info.name()).is_some()
+                };
+
+                if !already_present {
+                    // Print newly discovered device info
+                    println!("New device discovered: {}", info);
+                    devices.push(info);
+                }
+            }
         }
 
         Ok(())
