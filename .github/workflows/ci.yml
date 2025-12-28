@@ -38,6 +38,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Install apt dependencies
+        run: sudo apt install -y libpcap-dev
+
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
 

@@ -1,8 +1,8 @@
 pub mod device_info;
 pub mod device_info_list;
 
-use pcap::{Device, Capture};
-use anyhow::{Result, Context};
+use anyhow::{Context, Result};
+use pcap::{Capture, Device};
 
 use crate::parsers;
 use device_info_list::DeviceInfoList;
