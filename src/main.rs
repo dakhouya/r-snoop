@@ -1,10 +1,9 @@
 use anyhow::Result;
 use clap::Parser;
 
-use r_snoop::capture::Sniffer;
+use r_snoop::ui::App;
 
 #[derive(Parser, Debug)]
-#[command(author, version, about = "Passive Asset Fingerprinter")]
 struct Args {
     #[arg(short, long)]
     interface: String,
@@ -13,8 +12,8 @@ struct Args {
 fn main() -> Result<()> {
     let args = Args::parse();
 
-    let sniffer = Sniffer::new(&args.interface);
-    sniffer.run()?;
+    let mut app = App::new(args.interface);
+    app.run()?;
 
     Ok(())
 }
