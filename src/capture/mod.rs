@@ -41,10 +41,10 @@ impl Sniffer {
         while let Ok(packet) = cap.next_packet() {
             if let Some(info) = parsers::handle_packet(packet.data) {
                 // Append if not present: prefer MAC matching when available; otherwise by name
-                let already_present = if let Some(mac) = info.mac() {
+                let already_present = if let Some(mac) = info.mac_addr() {
                     devices.find_by_mac(mac).is_some()
                 } else {
-                    devices.find_by_name(info.name()).is_some()
+                    false
                 };
 
                 if !already_present {
@@ -74,10 +74,10 @@ impl Sniffer {
 
         while let Ok(packet) = cap.next_packet() {
             if let Some(info) = parsers::handle_packet(packet.data) {
-                let already_present = if let Some(mac) = info.mac() {
+                let already_present = if let Some(mac) = info.mac_addr() {
                     devices.find_by_mac(mac).is_some()
                 } else {
-                    devices.find_by_name(info.name()).is_some()
+                    false
                 };
 
                 if !already_present {

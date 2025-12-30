@@ -125,7 +125,7 @@ impl App {
                         .iter()
                         .map(|device| {
                             let mac_str = device
-                                .mac()
+                                .mac_addr()
                                 .map(|m| {
                                     format!(
                                         "{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}",
@@ -145,11 +145,8 @@ impl App {
                                     .join(", ")
                             };
 
-                            let display = if ipv4_str.is_empty() {
-                                format!("● {} - {}", device.name(), mac_str)
-                            } else {
-                                format!("● {} - {} - {}", device.name(), mac_str, ipv4_str)
-                            };
+                            let display =
+                                format!("● {} - {} - {}", ipv4_str, mac_str, device.mac_vendor());
 
                             ListItem::new(Line::from(Span::styled(
                                 display,
