@@ -1,17 +1,21 @@
+use oui_data;
+
 // Device information container for a network interface
 #[derive(Debug, Clone, Default)]
 pub struct DeviceInfo {
     // DNS name associated with the discovered host (not the monitored interface)
-    dsn_name: String,
+    mac_vendor: String,
     mac_addr: Option<[u8; 6]>,
     ipv4_addrs: Vec<[u8; 4]>,
     ipv6_addrs: Vec<[u8; 16]>,
 }
 
+const DEFAULT_MAC_VENDOR: &str = "Unknown";
+
 impl DeviceInfo {
-    pub fn new<S: Into<String>>(dsn_name: S) -> Self {
+    pub fn new() -> Self {
         Self {
-            dsn_name: dsn_name.into(),
+            mac_vendor: DEFAULT_MAC_VENDOR.to_string(),
             mac_addr: None,
             ipv4_addrs: Vec::new(),
             ipv6_addrs: Vec::new(),
@@ -20,6 +24,13 @@ impl DeviceInfo {
 
     pub fn set_mac(mut self, mac: [u8; 6]) -> Self {
         self.mac_addr = Some(mac);
+        let mac_str = format!(
+            "{:02X}:{:02X}:{:02X}:{:02X}:{:02X}:{:02X}",
+            mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]
+        );
+        self.mac_vendor = oui_data::lookup(&mac_str)
+            .map(|rec| rec.organization().to_string())
+            .unwrap_or(DEFAULT_MAC_VENDOR.to_string());
         self
     }
 
@@ -31,10 +42,10 @@ impl DeviceInfo {
         self.ipv6_addrs.push(ip);
     }
 
-    pub fn name(&self) -> &str {
-        &self.dsn_name
+    pub fn mac_vendor(&self) -> &str {
+        &self.mac_vendor
     }
-    pub fn mac(&self) -> Option<[u8; 6]> {
+    pub fn mac_addr(&self) -> Option<[u8; 6]> {
         self.mac_addr
     }
     pub fn ipv4(&self) -> &[[u8; 4]] {
@@ -89,8 +100,8 @@ impl std::fmt::Display for DeviceInfo {
         };
         write!(
             f,
-            "DeviceInfo(dsn_name={}, mac={}, ipv4={}, ipv6={})",
-            self.dsn_name, mac_str, ipv4_str, ipv6_str
+            "DeviceInfo(mac_vendor={}, mac={}, ipv4={}, ipv6={})",
+            self.mac_vendor, mac_str, ipv4_str, ipv6_str
         )
     }
 }

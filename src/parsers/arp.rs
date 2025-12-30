@@ -1,6 +1,5 @@
 use crate::capture::device_info::DeviceInfo;
 use etherparse::PacketHeaders;
-use oui_data;
 
 pub fn handle_arp(packet: &[u8]) -> Option<DeviceInfo> {
     match PacketHeaders::from_ethernet_slice(packet) {
@@ -28,20 +27,7 @@ pub fn handle_arp(packet: &[u8]) -> Option<DeviceInfo> {
                     sender_proto_addr[3],
                 ];
 
-                // Try to derive a display name from OUI organization, else use IP as name
-                let mac_str = format!(
-                    "{:02X}:{:02X}:{:02X}:{:02X}:{:02X}:{:02X}",
-                    mac_arr[0], mac_arr[1], mac_arr[2], mac_arr[3], mac_arr[4], mac_arr[5]
-                );
-                let default_name = format!(
-                    "{}.{}.{}.{}",
-                    ipv4_arr[0], ipv4_arr[1], ipv4_arr[2], ipv4_arr[3]
-                );
-                let name = oui_data::lookup(&mac_str)
-                    .map(|rec| rec.organization().to_string())
-                    .unwrap_or(default_name);
-
-                let mut info = DeviceInfo::new(name).set_mac(mac_arr);
+                let mut info = DeviceInfo::new().set_mac(mac_arr);
                 info.add_ipv4(ipv4_arr);
                 Some(info)
             } else {

@@ -30,15 +30,8 @@ impl DeviceInfoList {
         self.devices.iter_mut()
     }
 
-    pub fn find_by_name(&self, name: &str) -> Option<&DeviceInfo> {
-        self.devices.iter().find(|d| d.name() == name)
-    }
-    pub fn find_by_name_mut(&mut self, name: &str) -> Option<&mut DeviceInfo> {
-        self.devices.iter_mut().find(|d| d.name() == name)
-    }
-
     pub fn find_by_mac(&self, mac: [u8; 6]) -> Option<&DeviceInfo> {
-        self.devices.iter().find(|d| d.mac() == Some(mac))
+        self.devices.iter().find(|d| d.mac_addr() == Some(mac))
     }
 
     pub fn as_slice(&self) -> &[DeviceInfo] {
