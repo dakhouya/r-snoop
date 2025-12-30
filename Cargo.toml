@@ -9,3 +9,5 @@ clap = { version = "4.4", features = ["derive"] }
 anyhow = "1.0"
 etherparse = "0.19"
 oui-data = "0.2.1"
+ratatui = "0.30"
+crossterm = "0.28"
